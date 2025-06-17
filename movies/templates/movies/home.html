@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #111;
+            padding: 20px;
+            color: #ffcc00;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        form {
+            margin: 30px auto;
+        }
+
+        input[type="text"], button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            width: 250px;
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #ffcc00;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #e6b800;
+        }
+
+        .movie-card {
+            display: inline-block;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+            text-align: left;
+            width: 220px;
+            margin: 20px;
+        }
+
+        .movie-card img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffcc00;
+            margin-top: 40px;
+        }
+
+        .genre-bar {
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .genre-btn {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffcc00;
+            border: 1px solid #555;
+            border-radius: 5px;
+            cursor: not-allowed;
+        }
+
+        .genre-btn:hover {
+            background-color: #444;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎬 Movie Explorer</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if form.errors %}
+            <div style="color: red;">{{ form.errors }}</div>
+        {% endif %}
+
+        <button type="submit" name="search">Search</button>
+    </form>
+
+    <div class="genre-bar">
+        <h2 class="section-title">🎭 Browse by Genre</h2>
+        <button class="genre-btn">Action</button>
+        <button class="genre-btn">Comedy</button>
+        <button class="genre-btn">Drama</button>
+        <button class="genre-btn">Horror</button>
+        <button class="genre-btn">Sci-Fi</button>
+        <button class="genre-btn">Romance</button>
+    </div>
+
+    {% if movie_data %}
+        <div class="movie-card">
+            <img src="{{ movie_data.poster }}" alt="Poster">
+            <h3>{{ movie_data.title }}</h3>
+            <p><strong>Year:</strong> {{ movie_data.year }}</p>
+            <p><strong>Plot:</strong> {{ movie_data.plot }}</p>
+        </div>
+    {% elif request.method == 'POST' %}
+        <p style="color: orange;">No movie found. Try a different title.</p>
+    {% endif %}
+
+    {% if saved_movies %}
+        <h2 class="section-title">📚 Search History</h2>
+        <ul>
+            {% for movie in saved_movies %}
+                <li>{{ movie.title }} ({{ movie.year }})</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,5 @@
+# MOVIE EXPLORER
+
+Sharica C. Balicat
+18002320000
+ITE6200
